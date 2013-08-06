@@ -34,27 +34,32 @@ Examples
 
 0)	
     	
-{"10",
- "31"}
+{"10","31"}
+
 Returns: 2
 The given area is not leveled, because the minimum height is 0 and the maximum height is 3.
 Manao needs to reduce the height of lower left square by 2.
+
 1)	
     	
 {"54454",
  "61551"}
+
 Returns: 7
 In the optimal solution each square will have height either 4 or 5.
 To reach such a configuration, Manao should reduce the height of one square from 6 to 5, and increase the heights of two other squares from 1 to 4.
+
 2)	
     	
 {"989"}
 Returns: 0
 The area is already leveled.
+
 3)	
     	
 {"90"}
 Returns: 8
+
 4)	
     	
 {"5781252",
