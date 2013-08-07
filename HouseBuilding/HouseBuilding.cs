@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -8,11 +8,21 @@ namespace HouseBuilding
     {
         public Int32 GetMinimum(params String[] args)
         {
-            var result = 0;
             var average = GetAverage(args);
-            var min = (int) average;
+            var min = (int)average;
             var max = min + 1;
 
+            var min1 = min - 1;
+            var max1 = min;
+
+            var effort1 = GetEffort(args, min, max);
+            var effort2 = GetEffort(args, min1, max1);
+            return Math.Min(effort1, effort2);
+        }
+
+        private int GetEffort(string[] args, int min, int max)
+        {
+            int result = 0;
             foreach (var s in args)
                 foreach (var tmp in s.Select(c => int.Parse(c.ToString())))
                 {
@@ -50,12 +60,12 @@ namespace HouseBuilding
     [TestFixture]
     public class HouseBuildingTests
     {
-       
+
         [TestCase(7, new[] { "54454", "61551" })]
         [TestCase(2, new[] { "10", "31" })]
         [TestCase(0, new[] { "989" })]
         [TestCase(8, new[] { "90" })]
-        [TestCase(57, new[] { "5781252", "2471255", "0000291", "1212489" })]
+        [TestCase(53, new[] { "5781252", "2471255", "0000291", "1212489" })]
         [Test]
         public void UseCases(Int32 expected, params String[] values)
         {
