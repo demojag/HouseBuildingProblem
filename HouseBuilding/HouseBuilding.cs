@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using NUnit.Framework;
 namespace HouseBuilding
 {
@@ -8,56 +9,72 @@ namespace HouseBuilding
     {
         public Int32 GetMinimum(params String[] args)
         {
-            var average = GetAverage(args);
+            ICollection<Int32> converted;
+            var average = GetAverage(args,out converted);
             var pivot = (int)average;
 
-            var effort = GetEffort(args, pivot);
+            var effort = GetEffort(converted, pivot);
             return Math.Min(effort[0], effort[1]);
         }
 
-        private int[] GetEffort(IEnumerable<string> args, int pivot)
+        private int[] GetEffort(IEnumerable<int> args, int pivot)
         {
             var max = pivot + 1;
             var min = pivot - 1;
-            int result = 0;
-            int result1 = 0;
+            var result = 0;
+            var result1 = 0;
 
             foreach (var s in args)
-                foreach (var tmp in s.Select(c => int.Parse(c.ToString())))
-                {
-                    if (tmp < min)
-                    {
-                        result1 += min - tmp;
-                    }
-                    else if (tmp > pivot)
-                    {
-                        result1 += tmp - pivot;
-                    }
+            {
+                result1 += CalcWithPivotAsMax(pivot, s, min);
+                result += CalcWithPivotAsMin(pivot, s, max);
+            }
 
-                    if (tmp < pivot)
-                    {
-                        result += pivot - tmp;
-                    }
-                    else if (tmp > max )
-                    {
-                        result += tmp - max;
-                    }
-                }
-
-            return new []{result, result1};
+            return new[] { result, result1 };
         }
 
-        private Double GetAverage(IEnumerable<string> args)
+        private static int CalcWithPivotAsMin(int pivot, int s, int max)
+        {
+            int result = 0;
+            if (s < pivot)
+            {
+                result += pivot - s;
+            }
+            else if (s > max)
+            {
+                result += s - max;
+            }
+            return result;
+        }
+
+        private static int CalcWithPivotAsMax(int pivot, int s, int min)
+        {
+            int result = 0;
+            if (s < min)
+            {
+                result += min - s;
+            }
+            else if (s > pivot)
+            {
+                result += s - pivot;
+            }
+            return result;
+        }
+
+        private Double GetAverage(IEnumerable<String> args, out ICollection<Int32> converted)
         {
             var sum = 0;
             var i = 0;
+            converted = new Collection<int>();
+
             foreach (var s in args)
             {
                 foreach (var c in s)
                 {
-                    var tmp = int.Parse(c.ToString());
+                    var tmp = Int32.Parse(c.ToString(CultureInfo.InvariantCulture));
                     sum += tmp;
                     i++;
+                    converted.Add(tmp);
                 }
             }
 
