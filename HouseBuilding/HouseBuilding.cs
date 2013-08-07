@@ -9,34 +9,42 @@ namespace HouseBuilding
         public Int32 GetMinimum(params String[] args)
         {
             var average = GetAverage(args);
-            var min = (int)average;
-            var max = min + 1;
+            var pivot = (int)average;
 
-            var min1 = min - 1;
-            var max1 = min;
-
-            var effort1 = GetEffort(args, min, max);
-            var effort2 = GetEffort(args, min1, max1);
-            return Math.Min(effort1, effort2);
+            var effort = GetEffort(args, pivot);
+            return Math.Min(effort[0], effort[1]);
         }
 
-        private int GetEffort(string[] args, int min, int max)
+        private int[] GetEffort(IEnumerable<string> args, int pivot)
         {
+            var max = pivot + 1;
+            var min = pivot - 1;
             int result = 0;
+            int result1 = 0;
+
             foreach (var s in args)
                 foreach (var tmp in s.Select(c => int.Parse(c.ToString())))
                 {
                     if (tmp < min)
                     {
-                        result += min - tmp;
+                        result1 += min - tmp;
                     }
-                    else if (tmp > max)
+                    else if (tmp > pivot)
+                    {
+                        result1 += tmp - pivot;
+                    }
+
+                    if (tmp < pivot)
+                    {
+                        result += pivot - tmp;
+                    }
+                    else if (tmp > max )
                     {
                         result += tmp - max;
                     }
                 }
 
-            return result;
+            return new []{result, result1};
         }
 
         private Double GetAverage(IEnumerable<string> args)
